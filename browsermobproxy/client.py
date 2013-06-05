@@ -4,14 +4,18 @@ import json
 
 
 class Client(object):
-    def __init__(self, url):
+    def __init__(self, url, **kwargs):
         """
         Initialises a new Client object
         :Args:
          - url: This is where the BrowserMob Proxy lives
         """
+        if 'upstreamProxy' in kwargs:
+            payload = {'httpProxy':kwargs['upstreamProxy']}
+        else:
+            payload = {}
         self.host = url
-        resp = requests.post('%s/proxy' % self.host, urlencode(''))
+        resp = requests.post('%s/proxy' % self.host, params=payload)
         jcontent = json.loads(resp.content)
         self.port = jcontent['port']
         url_parts = self.host.split(":")
